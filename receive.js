@@ -16,7 +16,7 @@ var PeerFileReceive = function(connection) {
 inherits(PeerFileReceive, EventEmitter)
 
 PeerFileReceive.prototype.handle = function(data) {
-  var acceptable = /^file:(start|chunk|end|cancel)$/
+  var acceptable = /^file:(start|chunk|pause|resume|end|cancel)$/
 
   if (data.type && !acceptable.test(data.type)) {
     return false
@@ -56,6 +56,14 @@ PeerFileReceive.prototype.handle = function(data) {
     file.cancelled = true
     this.received[data.id] = file
     this.emit('cancel', file)
+  }
+
+  else if (data.type === 'file:pause') {
+    this.emit('pause', file);
+  }
+
+  else if (data.type === 'file:resume') {
+    this.emit('resume', file);
   }
 }
 

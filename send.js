@@ -47,6 +47,12 @@ PeerFileSend.prototype.pause = function() {
   if (this.stream && !this.stream.paused) {
     this.stream.pause()
     this.emit('pause')
+
+    // Tell receiver that this is the end.
+    this.connection.send({
+      type: 'file:pause',
+      id: this.id
+    })
   }
 
   return this
@@ -56,6 +62,12 @@ PeerFileSend.prototype.resume = function() {
   if (this.stream && this.stream.paused) {
     this.stream.resume()
     this.emit('resume')
+
+    // Tell receiver that this is the end.
+    this.connection.send({
+      type: 'file:resume',
+      id: this.id
+    })
   }
 
   return this
